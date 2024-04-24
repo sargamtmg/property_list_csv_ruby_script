@@ -29,7 +29,7 @@ ruby main.rb "73 W Monroe St, Chicago, IL 60603, USA" 50
 
 ## Output
 
-The script generates a CSV file named `listing_<timestamp>.csv` in the folder named listings, containing the following columns:
+The script generates a CSV file named `<address>_<timestamp>.csv` in the folder named listings, containing the following columns:
 
 - Listing ID
 - Listing Title
