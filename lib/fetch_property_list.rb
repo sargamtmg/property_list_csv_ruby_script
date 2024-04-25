@@ -9,6 +9,7 @@ module FetchData
 
     Uri = URI.parse(Url);
 
+    # extract only relevent information from response list
     def self.process_property_list(json_data)
         property_listings = json_data.dig('data','propertySearch','propertySearchListings') || []
         return property_listings.filter { |item| item['id'] }
@@ -22,6 +23,7 @@ module FetchData
             end
     end
 
+    # Make an api request to fetch data and return list with pagination's next subset information
     def self.call_api(address,starting_index,page_size)
         http = Net::HTTP.new(Uri.host,Uri.port)
         http.use_ssl=true
@@ -46,6 +48,7 @@ module FetchData
         return { property_list: [], next_subset: nil }
     end
 
+    # it call api iterativly and return total property list
     def self.fetch_list(address,page_size)
         starting_index=0
         property_list_data=[]

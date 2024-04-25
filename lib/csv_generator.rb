@@ -9,10 +9,10 @@ module CSVGenerator
         timestamp = Time.now.strftime("%Y-%m-%d_%H-%M-%S")
         csv_file = File.join(folder_path, "#{address.gsub(" ","")}_#{timestamp}.csv")
         CSV.open(csv_file, 'wb') do |csv|
-            # Write header from first hash
+            # Append headers in csv
             csv << list[0].keys
           
-            # Write data rows
+            # Append property information in csv
             list.each do |property_detail|
               csv << property_detail.values
             end
