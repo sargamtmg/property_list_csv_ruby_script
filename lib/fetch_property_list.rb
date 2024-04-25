@@ -2,6 +2,7 @@ require 'uri'
 require 'net/http'
 require 'json'
 require_relative 'api/api_detail'
+require_relative 'get_date_availability'
 
 module FetchData
     Url = APIDetail::Url
@@ -17,7 +18,7 @@ module FetchData
             {
                 "Listing ID": listing['id'],
                 "Listing Title": listing['headingSection']&.dig('heading') || "N/A",
-                "Nightly Price": (listing['priceSection']&.dig('priceSummary', 'displayMessages', 0, 'lineItems', 0, 'price', 'formatted')&.gsub("$", "") || "N/A"),
+                "Nightly Price": listing['priceSection']&.dig('priceSummary', 'displayMessages', 0, 'lineItems', 0, 'price', 'formatted')&.gsub("$", "") || "N/A",
                 "Listing URL": listing['cardLink']&.dig('resource', 'value') || "N/A"
             }
             end
@@ -35,9 +36,10 @@ module FetchData
             if response.code == "200"
                 json_data = JSON.parse(response.body)
                 property_list = process_property_list(json_data) 
+                property_list_with_availabity= Availability.get_date_availability_from_list(property_list)
                 next_subset = json_data.dig('data','propertySearch','pagination','subSets','nextSubSet') || nil
                 puts "Success fetching list at starting index : #{starting_index}"
-                return { property_list: property_list, next_subset: next_subset }
+                return { property_list: property_list_with_availabity, next_subset: next_subset }
             else
                 puts "HTTP Error: #{response.code}"
                 puts "Fail to fetch at starting index : #{starting_index}"
@@ -52,12 +54,12 @@ module FetchData
     def self.fetch_list(address,page_size)
         starting_index=0
         property_list_data=[]
-        while true
+        if true
             page_detail = call_api(address,starting_index,page_size)
             property_list_data.concat(page_detail[:property_list])
             next_page_subset = page_detail[:next_subset]
             if next_page_subset.nil?
-                break
+                #break
             else
                 starting_index = next_page_subset["startingIndex"]
             end
