@@ -54,7 +54,18 @@ module APIDetail
               },
               "criteria": {
                 "primary": {
-                  "dateRange": nil,
+                  "dateRange": {
+                    "checkInDate": {
+                        "day": 1,
+                        "month": 5,
+                        "year": 2024
+                    },
+                    "checkOutDate": {
+                        "day": 10,
+                        "month": 5,
+                        "year": 2024
+                    }
+                },
                   "destination": {
                     "regionName": address,
                     "regionId": nil,
