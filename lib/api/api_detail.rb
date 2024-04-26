@@ -171,7 +171,6 @@ module APIDetail
       day = today.day
       month = today.month
       year = today.year
-      next_year = year+1
       return [
         {
           "operationName": "PropertyAvailabilityQuery",
