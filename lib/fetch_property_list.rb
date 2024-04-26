@@ -54,12 +54,12 @@ module FetchData
     def self.fetch_list(address,page_size)
         starting_index=0
         property_list_data=[]
-        if true
+        while true
             page_detail = call_api(address,starting_index,page_size)
             property_list_data.concat(page_detail[:property_list])
             next_page_subset = page_detail[:next_subset]
             if next_page_subset.nil?
-                #break
+                break
             else
                 starting_index = next_page_subset["startingIndex"]
             end
