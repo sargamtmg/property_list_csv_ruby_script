@@ -3,6 +3,7 @@ require 'net/http'
 require 'json'
 require_relative 'api/api_detail'
 require_relative 'get_date_availability'
+require_relative 'add_date_availability_to_list'
 
 module FetchData
     Url = APIDetail::Url
@@ -36,9 +37,9 @@ module FetchData
             if response.code == "200"
                 json_data = JSON.parse(response.body)
                 property_list = process_property_list(json_data) 
-                property_list_with_availabity= Availability.get_date_availability_from_list(property_list)
+                property_list_with_availabity= DateAvailability.get_date_availability_from_list(property_list)
                 next_subset = json_data.dig('data','propertySearch','pagination','subSets','nextSubSet') || nil
-                puts "Success fetching list at starting index : #{starting_index}"
+                puts "Success fetching and processing list with starting index : #{starting_index}"
                 return { property_list: property_list_with_availabity, next_subset: next_subset }
             else
                 puts "HTTP Error: #{response.code}"
